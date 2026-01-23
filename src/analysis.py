@@ -31,6 +31,45 @@ def analyze_lifestyle(df: pd.DataFrame):
     
     logger.info(f"Lifestyle analysis complete. P-value: {p_val:.4f}")
 
+def analyze_physical_activity(df: pd.DataFrame):
+    """
+    Hypothesis 4: Investigating the link between Physical Activity and Alzheimer's Diagnosis.
+    Uses Independent T-test for continuous data comparison.
+    Note: Activity levels were recorded post-diagnosis.
+    """
+    # Fix: Ensure Diagnosis_bin is numeric to avoid plotting warnings
+    df['Diagnosis_bin'] = df['Diagnosis_bin'].astype(int)
+
+    # Statistical Calculation
+    group_healthy = df[df['Diagnosis_bin'] == 0]['PhysicalActivity']
+    group_alzheimer = df[df['Diagnosis_bin'] == 1]['PhysicalActivity']
+    
+    t_stat, p_val = stats.ttest_ind(group_healthy, group_alzheimer, nan_policy='omit')
+    
+    # Visualization
+    plt.figure(figsize=(8, 5))
+    ax = sns.pointplot(
+        data=df, 
+        x='Diagnosis_bin', 
+        y='PhysicalActivity', 
+        hue='Diagnosis_bin',
+        palette=[PALETTE[2], PALETTE[0]], # Blue for Healthy (2), Red for Alzheimer (0)
+        join=False,       
+        capsize=.1,
+        scale=1.2
+    )
+    
+    status = "Significant" if p_val < SIGNIFICANCE_LEVEL else "Not Significant"
+    plt.title(f"Physical Activity by Diagnosis\nResult: {status} (p = {p_val:.4f})", fontweight='bold')
+    plt.xticks([0, 1], ['Healthy', 'Alzheimer'])
+    plt.xlabel("Diagnosis Group")
+    plt.ylabel("Average Physical Activity Score")
+    plt.grid(axis='y', alpha=0.2)
+    plt.tight_layout()
+    plt.show()
+    
+    logger.info(f"Physical activity analysis complete. P-value: {p_val:.4f}")
+    
 def analyze_education(df: pd.DataFrame):
     """
     Hypothesis 2: Link between Education Level and MMSE scores.
