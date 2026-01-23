@@ -1,0 +1,71 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+import logging
+
+logger = logging.getLogger(__name__)
+
+# Visual Settings
+PALETTE = ["#b30047", "#ff4dc4", "#0000e6", "#9999ff",]
+SIGNIFICANCE_LEVEL = 0.05
+
+def analyze_lifestyle(df: pd.DataFrame):
+    """
+    Hypothesis 1: Investigating the link between Smoking and Alzheimer's Diagnosis.
+    Uses Chi-Square test for categorical data.
+    """
+    # Statistical Calculation
+    contingency = pd.crosstab(df['Smoking_bin'], df['Diagnosis_bin'])
+    chi2, p_val, _, _ = stats.chi2_contingency(contingency)
+    
+    # Visualization
+    plt.figure(figsize=(8, 5))
+    sns.barplot(data=df, x='Smoking_bin', y='Diagnosis_bin', hue='Smoking_bin', palette=PALETTE[:2], legend=False)
+    
+    status = "Significant" if p_val < SIGNIFICANCE_LEVEL else "Not Significant"
+    plt.title(f"Smoking vs Diagnosis\nResult: {status} (p = {p_val:.4f})", fontweight='bold')
+    plt.xlabel("Smoking Status (0=No, 1=Yes)")
+    plt.ylabel("AD Diagnosis Rate")
+    plt.show()
+    
+    logger.info(f"Lifestyle analysis complete. P-value: {p_val:.4f}")
+
+def analyze_education(df: pd.DataFrame):
+    """
+    Hypothesis 2: Link between Education Level and MMSE scores.
+    Uses ANOVA to compare means across multiple education groups.
+    """
+    # Group data by Education level for ANOVA
+    edu_groups = [df[df['EducationLevel'] == i]['MMSE'] for i in sorted(df['EducationLevel'].unique())]
+    f_stat, p_val = stats.f_oneway(*edu_groups)
+    
+    # Visualization
+    plt.figure(figsize=(8, 5))
+    sns.pointplot(data=df, x='EducationLevel', y='MMSE', color=PALETTE[0], capsize=.1)
+    
+    status = "Significant" if p_val < SIGNIFICANCE_LEVEL else "Not Significant"
+    plt.title(f"Average MMSE by Education Level\nANOVA Result: {status} (p = {p_val:.4f})", fontweight='bold')
+    plt.grid(axis='y', alpha=0.3)
+    plt.show()
+    
+    logger.info(f"Education analysis complete. P-value: {p_val:.4f}")
+
+def analyze_sleep(df: pd.DataFrame):
+    """
+    Hypothesis 3: Impact of Sleep Quality on Memory Complaints.
+    Uses Independent T-test to compare two groups.
+    """
+    group_no = df[df['MemoryComplaints_bin'] == 0]['SleepQuality']
+    group_yes = df[df['MemoryComplaints_bin'] == 1]['SleepQuality']
+    t_stat, p_val = stats.ttest_ind(group_no, group_yes)
+    
+    # Visualization
+    plt.figure(figsize=(8, 5))
+    sns.kdeplot(data=df, x='SleepQuality', hue='MemoryComplaints_bin', fill=True, palette=PALETTE[2:])
+    
+    status = "Significant" if p_val < SIGNIFICANCE_LEVEL else "Not Significant"
+    plt.title(f"Sleep Quality vs Memory Complaints\nT-test Result: {status} (p = {p_val:.4f})", fontweight='bold')
+    plt.show()
+    
+    logger.info(f"Sleep analysis complete. P-value: {p_val:.4f}")
