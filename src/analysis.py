@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Visual Settings
-PALETTE = ["#b30047", "#ff4dc4", "#0000e6", "#9999ff",]
+PALETTE = ["#b30047", "#ff4dc4", "#0000e6", "#9999ff"]
 SIGNIFICANCE_LEVEL = 0.05
 
 def analyze_lifestyle(df: pd.DataFrame):
