@@ -1,7 +1,7 @@
 # Alzheimer's Disease Analysis & Statistical System
 
 ## Research Paper
-You can read the full scientific mini-paper [here on Google Drive](https://docs.google.com/document/d/1r2p0a9bw7OTt7JlBNB4j6_qb4v0_A1BGfarhBorS0LU/edit?usp=sharing).
+You can read the mini-paper [here on Google Drive](https://docs.google.com/document/d/1r2p0a9bw7OTt7JlBNB4j6_qb4v0_A1BGfarhBorS0LU/edit?usp=sharing).
 
 ## 1. Project Description & Objectives
 **Description:** This project analyzes the impact of lifestyle habits, education, and clinical indicators on Alzheimer's Disease diagnosis. The system utilizes a **modular data pipeline** to process clinical records, perform statistical validation, and visualize key risk factors.

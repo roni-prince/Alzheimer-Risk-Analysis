@@ -26,6 +26,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
             
     # Remove rows without a valid diagnosis
     df = df.dropna(subset=['Diagnosis_bin'])
+    df['Diagnosis_bin'] = df['Diagnosis_bin'].astype(int)     # Ensure Diagnosis_bin is numeric to avoid plotting warnings
     
     logger.info("Data preprocessing completed successfully.")
     return df

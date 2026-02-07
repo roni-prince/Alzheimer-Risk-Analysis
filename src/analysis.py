@@ -42,8 +42,6 @@ def analyze_physical_activity(df: pd.DataFrame):
     Uses Independent T-test for continuous data comparison.
     Note: Activity levels were recorded post-diagnosis.
     """
-    # Ensure Diagnosis_bin is numeric to avoid plotting warnings
-    df['Diagnosis_bin'] = df['Diagnosis_bin'].astype(int)
 
     # Statistical Calculation
     group_healthy = df[df['Diagnosis_bin'] == 0]['PhysicalActivity']
