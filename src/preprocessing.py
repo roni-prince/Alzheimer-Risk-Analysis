@@ -13,7 +13,7 @@ BINARY_MAP = {"yes": 1, "no": 0, "true": 1, "false": 0, "1": 1, "0": 0}
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     #Standardizes columns and encodes variables for analysis.
-    #The copy is of the dataframe, we do not want to change the original data, but we do want a new copy to ba able to modify it fo our liking.
+    #The copy is of the dataframe, we do not want to change the original data, but we do want a new copy to ba able to modify it to our liking.
     #This way, we will be able to prevent mistakes  and misunderstandings
     df = df.copy()
     
@@ -25,7 +25,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     
     #2.Lifestyle & Symptoms (Smoking, MemoryComplaints)
     #Switch them to binary format.
-    #Also, if th ecolumn is already numeric and there are NaNs, avoid turning them into strings.
+    #Also, if the column is already numeric and there are NaNs, avoid turning them into strings.
     for col in ['Smoking', 'MemoryComplaints']:
         if col in df.columns:
             # If the column is already numeric (0/1), just copy it
@@ -35,6 +35,11 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
                 #If it's text, convert to lowercase and map to 0/1
                 #Normalizes the whitespaces and the text. 
                 df[f"{col}_bin"] = df[col].astype(str).str.lower().str.strip().map(BINARY_MAP)
+
+    # 3. Continuous variables
+    #this is the BMI preprocessing.
+    if 'BMI' in df.columns:
+        df['BMI'] = pd.to_numeric(df['BMI'], errors='coerce')
             
     # Remove rows without a valid diagnosis
     df = df.dropna(subset=['Diagnosis_bin'])
